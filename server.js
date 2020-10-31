@@ -24,18 +24,32 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+function timestamp(date) {
+  return {
+    unix: date.getTime(), 
+    utc: date.toUTCString()
+  };
+}
+
+app.get("/api/timestamp", function(req, res) {
+  res.json(timestamp(new Date()));
+});
+
 app.get("/api/timestamp/:date_string", function(req, res) {
-  let millis = Number(req.params.date_string);
+
   let date;
+  let millis = Number(req.params.date_string);
+
   if(isNaN(millis)) {
     date = new Date(req.params.date_string);
   } else {
     date = new Date(millis);
-  }
+  } 
+
   if(isNaN(date.getTime())) {
     res.json({error: "Invalid Date"});
   } else {
-    res.json({unix: date.getTime(), utc: date.toUTCString()});
+    res.json(timestamp(date));
   }
 });
 
